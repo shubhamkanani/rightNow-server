@@ -1,12 +1,15 @@
 import express from "express";
 import cors from "cors";
 import setupMiddware from './middlewares'
+import {connect} from './db'
+import {authRouter} from './aurthorization'
 const app = express();
 
 require("dotenv").config()
 
 setupMiddware(app)
 
+connect();
 
 app.use(cors());
 app.use('/auth',(req,res,next)=>{
@@ -21,7 +24,5 @@ app.use('/auth',(req,res,next)=>{
   res.header("X-Content-Type-Options", "nosniff")
   next();
 })
-app.get('/auth',(req,res)=>{
-    console.log('done')
-})
+app.use('/auth',authRouter)
 export default app;
