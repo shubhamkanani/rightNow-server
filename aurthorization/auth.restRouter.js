@@ -8,4 +8,4 @@ import {requireSignIn} from './auth.middleware'
 export const authRouter = express.Router();
 authRouter.post('/forgetpassword', forgotPassword)
 authRouter.post("/signup", signup);
-authRouter.post('/signin',signin)
+authRouter.post('/signin',requireSignIn,signin)

@@ -2,6 +2,7 @@ import http from "http"
 
 import app from "./server"
 
+
 let server = null;
 
 if (process.env.NODE_ENV === "development") {
@@ -10,7 +11,6 @@ if (process.env.NODE_ENV === "development") {
     console.log("This is the production environment")
     server = app
   }
-
 const PORT = process.env.PORT || 8000
 server.listen(PORT, async () => {
   try {

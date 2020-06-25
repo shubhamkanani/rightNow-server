@@ -1,6 +1,6 @@
 import {Users} from '../api/user'
 import bcrypt from 'bcrypt-nodejs'
-import jwt from 'jsonwebtoken'
+import jwt, { decode } from 'jsonwebtoken'
 import configKey from '../config'
 import nodemailer from 'nodemailer'
 
@@ -127,4 +127,20 @@ export const forgotPassword = async (req,res) =>{
               message: "please check your email to reset your password!"
             });
       });
+}
+export const resetpassword = async(req,res) =>{
+  try{
+      const token = req.query.token;
+      await Users.findOneAndUpdate(
+        { emailId: decoded.sub },
+        { password: bcrypt.hashSync(req.body.password) }
+      )
+      return res.status(200).send({
+        success:true,
+        message:"your password change successfully"
+      })
+  }
+  catch(err){
+    res.status(422).send({ success: false, message: err.message });
+  }
 }
