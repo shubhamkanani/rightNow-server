@@ -16,7 +16,7 @@ io.sockets.on('connection', function (socket) {
 
   // start listening for coords
   socket.on('send:coords', function (data) {
-
+    
   	// broadcast your coordinates to everyone except you
   	socket.broadcast.emit('load:coords', data);
   });
