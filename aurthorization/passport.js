@@ -12,6 +12,8 @@ const localOptions = {
     usernameField: "email"
   };
 
+//local login strategy
+
 const localLogin = new LocalStrategy(
     localOptions,
     async (email, password, done)=>{
@@ -38,6 +40,8 @@ const localLogin = new LocalStrategy(
 )
 
 passport.use(localLogin);
+
+//jwt login stretegy
 
 const jwtOptions = {
     jwtFromRequest: ExtractJwt.fromHeader("authorization"),

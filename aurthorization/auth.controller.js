@@ -42,6 +42,7 @@ export const signup = async (req,res) =>{
 }
 
 //token genration
+
 const expirationInterval =
     (process.env.NODE_ENV === "development")? 30 * 24 * 60 * 60: (parseInt(process.env.JWTSECRET) || 1) * 24 * 60 * 60;
 
@@ -64,7 +65,7 @@ const tokenForUser = (user) => {
     }
   };
 
-  //signin api
+//signin api
 
 export const signin = async (req,res) => {
     const {email} = req.body;
@@ -91,6 +92,7 @@ export const signin = async (req,res) => {
 //forget password
 
 export const forgotPassword = async (req,res) =>{
+  try{
     let {email} = req.body
     const emailId = email.toLowerCase();
     const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -127,10 +129,21 @@ export const forgotPassword = async (req,res) =>{
               message: "please check your email to reset your password!"
             });
       });
+  }
+  catch(err) {
+    res.status(200).send({
+      success:false,
+      message:err.message
+    })
+  }
+    
 }
+
+//reset password api
+
 export const resetpassword = async(req,res) =>{
   try{
-      const token = req.query.token;
+      const token = req.query.token; //JWT
       await Users.findOneAndUpdate(
         { emailId: decoded.sub },
         { password: bcrypt.hashSync(req.body.password) }

@@ -1,6 +1,8 @@
 import bodyParser from 'body-parser'
 import helmet from 'helmet'
 
+//global middleware
+
 const setGlobelMiddleware = app =>{
     app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
     app.use(bodyParser.json({ limit: "50mb" }));

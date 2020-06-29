@@ -5,6 +5,8 @@ import appConfig from "./config";
 mongoose.Promise = global.Promise;
 mongoose.plugin(timestamps);
 
+//connection code of mongoose
+
 export const connect = (config = appConfig) => {
     mongoose.set("useCreateIndex", true);
     mongoose.set("useNewUrlParser", true);

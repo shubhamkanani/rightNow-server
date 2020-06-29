@@ -8,4 +8,4 @@ const liveStreamingSchema = Schema({
     genrateId:String
 }, { timestamps: {createdAt:'created_at'} })
 
-export const liveSchema = mongoose.model('userInfo',liveStreamingSchema);
+export const liveSchema = mongoose.model('livechat',liveStreamingSchema);
