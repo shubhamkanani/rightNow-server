@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === "development") {
     console.log("This is the production environment")
     server = app
   }
-  var io = require('socket.io').listen(server);
+var io = require('socket.io').listen(server);
 io.sockets.on('connection', function (socket) {
 
   // start listening for coords
