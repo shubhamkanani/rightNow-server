@@ -144,6 +144,7 @@ export const forgotPassword = async (req,res) =>{
 export const resetpassword = async(req,res) =>{
   try{
       const token = req.query.token; //JWT
+      const decoded  = jwt.decode(token);
       await Users.findOneAndUpdate(
         { emailId: decoded.sub },
         { password: bcrypt.hashSync(req.body.password) }
