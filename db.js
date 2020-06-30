@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { mongo } from 'mongoose'
 import timestamps from 'mongoose-timestamp'
 import appConfig from "./config";
 
@@ -12,7 +12,7 @@ export const connect = (config = appConfig) => {
     mongoose.set("useNewUrlParser", true);
     mongoose.set("useFindAndModify", false);
     mongoose.connect(
-        "mongodb+srv://dbUser:dbUser@cluster0-0sfyb.mongodb.net/<dbname>?retryWrites=true&w=majority",
+        "mongodb://127.0.0.1:27017/rightNowDb",
       { useUnifiedTopology: true,
         useNewUrlParser: true
       }
