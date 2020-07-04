@@ -1,6 +1,5 @@
 import bodyParser from 'body-parser'
 import helmet from 'helmet'
-
 //global middleware
 
 const setGlobelMiddleware = app =>{
@@ -10,6 +9,7 @@ const setGlobelMiddleware = app =>{
     app.use(helmet());
     app.use(helmet.xssFilter())
     app.disable("x-powered-by");
+    
 
     const sixtyDaysInSeconds = 5184000;
     app.use(

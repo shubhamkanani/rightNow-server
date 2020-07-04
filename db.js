@@ -12,7 +12,7 @@ export const connect = (config = appConfig) => {
     mongoose.set("useNewUrlParser", true);
     mongoose.set("useFindAndModify", false);
     mongoose.connect(
-        "mongodb://127.0.0.1:27017/rightNowDb",
+        appConfig.db.url,
       { useUnifiedTopology: true,
         useNewUrlParser: true
       }

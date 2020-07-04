@@ -10,4 +10,4 @@ const config = {
     port: process.env.PORT, //port on which our site running
   }
   
-  export default config 
+  export default config
