@@ -87,3 +87,30 @@ export const fetchLiveSteam = async(req,res) =>{
         })
     }
 }
+
+//start live streaming
+
+export const startLiveSteam = async(req,res) =>{
+    try{
+        const {id} = req.body
+        const options = {
+            headers: {
+                'wsc-api-key':'KkvvufvVDXZ9UMjhYxLQpaXNu67VJ9A0zp4b03yONzIdWQE2PHUv2dEUixfm3433',
+                'wsc-access-key': '9s4mq7dUGJFPUInHFK8YM4hpywxRBpr4w3cvC9CUYjWY0LGhg5X3YOU6g0gN3209',
+                'Content-Type': 'application/json'
+            }
+          };
+        const response = await axios.get("https://api.cloud.wowza.com/api/v1.5/live_streams/"+id,options)
+        console.log(response.data)
+        res.status(201).send({
+            success:true,
+            streamDetails:response.data
+        })
+    }
+    catch(err){
+        res.status(401).send({
+            success:false,
+            message:err.message
+        })
+    }
+}
