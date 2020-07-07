@@ -1,5 +1,6 @@
 import axios from 'axios'
 import crypto from 'crypto'
+import { response } from 'express';
 let fetch = require('node-fetch');
 
 export const createLiveStream = async(req,res) =>{
@@ -93,18 +94,49 @@ export const fetchLiveSteam = async(req,res) =>{
 export const startLiveSteam = async(req,res) =>{
     try{
         const {id} = req.body
-        const options = {
-            headers: {
+        const headers = {
                 'wsc-api-key':'KkvvufvVDXZ9UMjhYxLQpaXNu67VJ9A0zp4b03yONzIdWQE2PHUv2dEUixfm3433',
                 'wsc-access-key': '9s4mq7dUGJFPUInHFK8YM4hpywxRBpr4w3cvC9CUYjWY0LGhg5X3YOU6g0gN3209',
                 'Content-Type': 'application/json'
             }
-          };
-        const response = await axios.get("https://api.cloud.wowza.com/api/v1.5/live_streams/"+id,options)
-        console.log(response.data)
-        res.status(201).send({
+          //console.log(id)
+        axios('https://api.cloud.wowza.com/api/v1.5/live_streams/'+id+'/start',{ method: 'PUT', headers: headers})
+        .then(response =>{
+            return res.status(201).send({
+                success:true,
+                streamDetails:response.data
+            })
+        })
+        .catch(err=>{
+            return res.status(401).send({
+                success:false,
+                message:err.message
+            })
+        })
+    }
+    catch(err){
+        res.status(401).send({
+            success:false,
+            message:err.message
+        })
+    }
+}
+
+//stop liveStreaming
+
+export const stopLiveStream = async(req,res) =>{
+    try{
+        const {id} = req.body
+        const headers = {
+            'wsc-api-key':'KkvvufvVDXZ9UMjhYxLQpaXNu67VJ9A0zp4b03yONzIdWQE2PHUv2dEUixfm3433',
+            'wsc-access-key': '9s4mq7dUGJFPUInHFK8YM4hpywxRBpr4w3cvC9CUYjWY0LGhg5X3YOU6g0gN3209',
+            'Content-Type': 'application/json'
+        }
+        const response = await axios('https://api.cloud.wowza.com/api/v1.5/live_streams/'+id+'/stop',{ method: 'PUT', headers: headers})
+        console.log(response.data);
+        return res.status(201).send({
             success:true,
-            streamDetails:response.data
+            message:response.data
         })
     }
     catch(err){
