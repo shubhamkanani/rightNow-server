@@ -15,6 +15,7 @@ io.sockets.on('connection', function (socket) {
   	socket.broadcast.emit('load:coords', data);
   });
 });
+
 io.sockets.on('disconnect',()=>{
   delete users[socket.nickname];
 })
