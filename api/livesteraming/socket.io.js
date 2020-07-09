@@ -10,7 +10,7 @@ io.sockets.on('connection', function (socket) {
     users[socket.nickname] = socket;
   })
   socket.on('send:coords', function (data) {
-    //console.log(data)
+    console.log(data)
   	// broadcast your coordinates to everyone except you
   	socket.broadcast.emit('load:coords', data);
   });
