@@ -32,6 +32,7 @@ export const signup = async (req,res) =>{
         })
         return res.status(201).send({
             success: true,
+            token: tokenForUser(emailId),
             message: "User created successfully."
           });
     }
@@ -46,13 +47,13 @@ export const signup = async (req,res) =>{
 const expirationInterval =
     (process.env.NODE_ENV === "development")? 30 * 24 * 60 * 60: (parseInt(process.env.JWTSECRET) || 1) * 24 * 60 * 60;
 
-const tokenForUser = (user) => {
+const tokenForUser = (emailId) => {
     try {
       //console.log(user.emailId)
       const timestamp = new Date().getTime();
       return jwt.sign(
         {
-          sub: user.emailId,
+          sub: emailId,
           iat: timestamp,
           // entityDetails: loginDetails.relatedFaEntities[0],
           exp: Math.floor(Date.now() / 1000) + expirationInterval
@@ -76,7 +77,7 @@ export const signin = async (req,res) => {
                if(userExistence){
                 res.status(200).send({
                     success: true,
-                    token: tokenForUser(userExistence)
+                    token: tokenForUser(userExistence.email)
                   });
             }
             }
