@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === "development") {
     server = http.createServer(app)
   } else {
     console.log("This is the production environment")
-    server = app
+    server = http.createServer(app)
   }
 export var io = require('socket.io').listen(server);
 conncetSocket();
