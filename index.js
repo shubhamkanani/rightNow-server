@@ -1,8 +1,7 @@
 import http from "http"
-
+import SocketIO from 'socket.io'
 import app from "./server"
 import {conncetSocket} from './api/livesteraming/socket.io'
-
 let server = null;
 
 if (process.env.NODE_ENV === "development") {
@@ -11,7 +10,7 @@ if (process.env.NODE_ENV === "development") {
     console.log("This is the production environment")
     server = http.createServer(app)
   }
-export var io = require('socket.io').listen(server);
+export var io = SocketIO(server)
 conncetSocket();
 
 const PORT = process.env.PORT || 8000

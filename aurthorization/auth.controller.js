@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt-nodejs'
 import jwt, { decode } from 'jsonwebtoken'
 import configKey from '../config'
 import nodemailer from 'nodemailer'
-
+import {FirebaseNotification} from '../api/realTimeAndNotification/notification.modal'
 // mail object
 const smtpTransport = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -18,7 +18,7 @@ const smtpTransport = nodemailer.createTransport({
 
 export const signup = async (req,res) =>{
     try{
-        const {email,password} = req.body;
+        const {email,password,mobileToken} = req.body;
         const emailId = email.toLowerCase();
         const isEmailExist = await Users.findOne({emailId: emailId});
         if(isEmailExist){
@@ -26,9 +26,12 @@ export const signup = async (req,res) =>{
                     .status(422)
                     .send({ success: false, message: "Email is alrady exist" });
         }
-        await Users.create({
+        const user = await Users.create({
             emailId,
             password:bcrypt.hashSync(password),
+        })
+        await FirebaseNotification.create({userId:user._id,
+          mobileToken:mobileToken
         })
         return res.status(201).send({
             success: true,
@@ -69,17 +72,41 @@ const tokenForUser = (emailId) => {
 //signin api
 
 export const signin = async (req,res) => {
-    const {email} = req.body;
+    const {email,password,mobileToken} = req.body;
     try{
         const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
             if(emailRegexp.test(email)){
                const userExistence = await Users.findOne({emailId:email.toLowerCase()})
-               if(userExistence){
-                res.status(200).send({
+               if(!userExistence){
+                  return res.status(422).send({
+                    success: false,
+                    message: `Either Password or EmailId Doesn't match`
+                  });
+              }
+              const validPassword = await bcrypt.compareSync(password, userExistence.password);
+                //console.log(validPassword)
+                if(!validPassword){
+                  return res.status(422).send({
+                    success: false,
+                    message: `Password is Incorrect Please try Again later`
+                  });
+                }
+                const mobileTokenExist = await FirebaseNotification.findOne({userId:userExistence._id})
+                if(mobileTokenExist){
+                  console.log('enter')
+                  const daat = await FirebaseNotification.findOneAndUpdate({userId:userExistence._id},{
+                    mobileToken:mobileToken
+                  })
+                }
+                else{
+                  await FirebaseNotification.create({userId:userExistence._id,
+                    mobileToken:mobileToken
+                  })
+                }
+                  return res.status(200).send({
                     success: true,
                     token: tokenForUser(userExistence.email)
                   });
-            }
             }
     }
     catch(err){

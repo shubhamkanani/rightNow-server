@@ -2,7 +2,7 @@ import {io} from '../../index'
 import { connect } from 'mongoose'
 export const conncetSocket = ()=>{
 var Liveusers = [];
-io.sockets.on('connection', function (socket) {
+io.on('connection', function (socket) {
 
   // start listening for coords
   socket.on('newUser',(data)=>{
