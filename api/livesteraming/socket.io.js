@@ -5,7 +5,7 @@ import serverKey from '../../config/test-cb583-firebase-adminsdk-7y92g-312fa47d8
 import {FirebaseNotification} from '../realTimeAndNotification/notification.modal'
 export const conncetSocket = ()=>{
 var fcm = new FCM(serverKey)
-var Liveusers = [];
+var Liveusers = {};
 io.on('connection', function (socket) {
 
   // start listening for coords
@@ -53,8 +53,10 @@ io.on('connection', function (socket) {
       //data:{rtmp usrl, HSL, userID, sendId}
       socket.emit('send:stream',data)
     })
+    socket.on('disconnect',()=>{
+      delete Liveusers[socket.nickname];
+      console.log("Liveusers List:",Liveusers)
+    })
 });
-io.sockets.on('disconnect',()=>{
-  delete users[socket.nickname];
-})
+
 }
