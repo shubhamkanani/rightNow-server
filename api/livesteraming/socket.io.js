@@ -9,17 +9,18 @@ var Liveusers = [];
 io.on('connection', function (socket) {
 
   // start listening for coords
-  socket.on('newUser',(data)=>{
-    //console.log("serverKey:",serverKey)
-    socket.nickname = data.userId;
-    Liveusers[socket.nickname] = {socket:socket};
-    console.log(socket.nickname,'sdnfs')
-  })
+  // socket.on('newUser',(data)=>{
+  //   //console.log("serverKey:",serverKey)
+  //   socket.nickname = data.userId;
+  //   Liveusers[socket.nickname] = {socket:socket};
+  //   console.log(Liveusers.socket.nickname,'')
+  // })
   socket.on('send:coords', (data) => {
-    console.log(data)
+    console.log("send:coords data perameter :",data)
+    socket.nickname = data.userId;
     Liveusers[socket.nickname] = {socket:socket,latitude:data.lat,longitude:data.lon};
-    console.log('coords',Liveusers)
-  	socket.broadcast.emit('load:coords', Liveusers);
+    console.log("Liveusers List",Liveusers);
+  	//socket.broadcast.emit('load:coords', Liveusers);
   });
   //send a live stream request
     socket.on('request', (data) => {
