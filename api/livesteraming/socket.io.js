@@ -5,7 +5,7 @@ import serverKey from '../../config/test-cb583-firebase-adminsdk-7y92g-312fa47d8
 import {FirebaseNotification} from '../realTimeAndNotification/notification.modal'
 export const conncetSocket = ()=>{
 var fcm = new FCM(serverKey)
-var Liveusers = {};
+var Liveusers = [];
 io.on('connection', function (socket) {
 
   // start listening for coords
@@ -17,10 +17,15 @@ io.on('connection', function (socket) {
   // })
   socket.on('send:coords', (data) => {
     console.log("send:coords data perameter :",data)
+    //filter live users
+    Liveusers = Liveusers.filter(item=>item.socket.nickname!==data.userId);
+    //set nickname
     socket.nickname = data.userId;
-    Liveusers[socket.nickname] = {socket:socket,latitude:data.lat,longitude:data.lon};
-    console.log("Liveusers List",Liveusers);
-  	//socket.broadcast.emit('load:coords', Liveusers);
+    //push live location and userid in array
+    Liveusers.push({socket:socket,latitude:data.lat,longitude:data.lon,userId:data.userId});
+    console.log("currunt Liveusers List",Liveusers);
+    //publish array
+  	  socket.broadcast.emit('load:coords', Liveusers);
   });
   //send a live stream request
     socket.on('request', (data) => {
@@ -54,8 +59,10 @@ io.on('connection', function (socket) {
       socket.emit('send:stream',data)
     })
     socket.on('disconnect',()=>{
-      delete Liveusers[socket.nickname];
-      console.log("Liveusers List:",Liveusers)
+      //delete Liveusers[socket.nickname];
+      Liveusers = Liveusers.filter(item=>item.socket.nickname!==socket.nickname);
+      
+      console.log("after deleate Liveusers List:",Liveusers)
     })
 });
 
