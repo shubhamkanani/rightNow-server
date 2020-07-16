@@ -16,16 +16,17 @@ io.on('connection', function (socket) {
   //   console.log(Liveusers.socket.nickname,'')
   // })
   socket.on('send:coords', (data) => {
-    console.log("send:coords data perameter :",data)
+    console.log("send:coords data perameter :",data.lat)
     //filter live users
-    Liveusers = Liveusers.filter(item=>item.socket.nickname!==data.userId);
+    Liveusers = Liveusers.filter(item=>item.userId!==data.userId);
     //set nickname
     socket.nickname = data.userId;
+    console.log(data)
     //push live location and userid in array
-    Liveusers.push({socket:socket,latitude:data.lat,longitude:data.lon,userId:data.userId});
+    Liveusers.push({latitude:data.lat,longitude:data.lon,userId:data.userId});
     console.log("currunt Liveusers List",Liveusers);
     //publish array
-  	  socket.broadcast.emit('load:coords', Liveusers);
+      socket.emit("load:coords", Liveusers);
   });
   //send a live stream request
     socket.on('request', (data) => {
@@ -60,7 +61,7 @@ io.on('connection', function (socket) {
     })
     socket.on('disconnect',()=>{
       //delete Liveusers[socket.nickname];
-      Liveusers = Liveusers.filter(item=>item.socket.nickname!==socket.nickname);
+      Liveusers = Liveusers.filter(item=>item.userId!==socket.nickname);
       
       console.log("after deleate Liveusers List:",Liveusers)
     })

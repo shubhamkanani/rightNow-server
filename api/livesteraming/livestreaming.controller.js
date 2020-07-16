@@ -1,8 +1,21 @@
 import axios from 'axios'
-
+import {liveSchema} from'./livestreaming.modal'
 export const createLiveStream = async(req,res) =>{
     try{
-        const {steamName} = req.body
+        const {steamName,requestId} = req.body
+        const activeUser = await liveSchema.find({});
+        var flag = true;
+        activeUser.map(item =>{
+            if(item.requestId === requestId){
+                flag=false;
+            }
+        })
+        if(!flag){
+            return res.status(401).send({
+                success:false,
+                message:"user already active with other stream"
+            })
+        }
         const data = {
             "live_stream": {
                 "name": steamName,
@@ -23,6 +36,13 @@ export const createLiveStream = async(req,res) =>{
             }
           };
         const response = await axios.post("https://api.cloud.wowza.com/api/v1.5/live_streams",data,options)
+        if(response.data.live_stream){
+            liveSchema.create({
+                userId:steamName,
+                requestId:'sd12312fd',
+                streamId:response.data.live_stream.id
+            })
+        }
         console.log(response.data)
         res.status(201).send({
             success:true,
@@ -39,6 +59,7 @@ export const createLiveStream = async(req,res) =>{
 
 export const deleteLiveStream = async(req,res) =>{
     try{
+
         const {id} = req.body
         const options = {
             headers: {
@@ -53,6 +74,7 @@ export const deleteLiveStream = async(req,res) =>{
             success:true,
             streamDetails:response.data
         })
+        await liveSchema.remove({streamId:id})
     }
     catch(err){
         res.status(401).send({
