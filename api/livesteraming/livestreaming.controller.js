@@ -26,7 +26,7 @@ export const createLiveStream = async(req,res) =>{
                 "delivery_method": "push",
                 "aspect_ratio_width": 1920,
                 "aspect_ratio_height": 1080,
-                "low_latency": true,
+                "low_latency": true
               }
         }
         const options = {
